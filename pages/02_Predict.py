@@ -1,47 +1,167 @@
-"""Predict page"""
+"""Predict page - TransactGuard AI Fraud Detection"""
 import streamlit as st
-from src.styles import apply_dark_theme, render_sidebar
-from src.prediction_service import get_fraud_prediction
+from src.styles import apply_base_theme, apply_predict_theme, render_header, render_section_header, render_field_label, render_sidebar, start_form_wrapper, end_form_wrapper
 
-st.set_page_config(page_title="Predict - TransactGuard", layout="wide", initial_sidebar_state="collapsed")
-apply_dark_theme()
+# Page config
+st.set_page_config(
+    page_title="Predict - TransactGuard", 
+    layout="wide", 
+    initial_sidebar_state="expanded"
+)
+
+# Apply themes
+apply_base_theme()
+apply_predict_theme()
+
+# Render sidebar
 render_sidebar()
 
-col1, col2, col3 = st.columns([1, 2, 1])
+# Render banner header at top
+render_header()
+
+# Start form wrapper
+start_form_wrapper()
+
+# Transaction Details Section
+render_section_header("💳", "Transaction Details")
+
+col1, col2 = st.columns(2)
+with col1:
+    render_field_label("Transaction Amount")
+    tx_amount = st.number_input(
+        "tx_amt", 
+        min_value=0.0, 
+        value=100.0, 
+        step=10.0, 
+        label_visibility="collapsed", 
+        key="tx_amt", 
+        format="%.2f"
+    )
 
 with col2:
-    st.markdown('<div class="form-container"><h1 style="color: var(--text-primary); font-size: 28px; font-weight: 700;">Predict Transaction Fraud</h1></div>', unsafe_allow_html=True)
+    render_field_label("Sender Behavior ID")
+    sender_behavior_id = st.selectbox(
+        "behavior", 
+        options=[1, 2, 3, 4, 5], 
+        index=2, 
+        label_visibility="collapsed", 
+        key="behavior_id"
+    )
+
+# Account Balance Section
+render_section_header("💰", "Account Balances")
+
+col3, col4 = st.columns(2)
+with col3:
+    render_field_label("Sender Initial Balance")
+    sender_balance = st.number_input(
+        "sender_bal", 
+        min_value=0.0, 
+        value=5000.0, 
+        step=100.0, 
+        label_visibility="collapsed", 
+        key="sender_bal", 
+        format="%.2f"
+    )
+
+with col4:
+    render_field_label("Receiver Initial Balance")
+    receiver_balance = st.number_input(
+        "receiver_bal", 
+        min_value=0.0, 
+        value=3000.0, 
+        step=100.0, 
+        label_visibility="collapsed", 
+        key="receiver_bal", 
+        format="%.2f"
+    )
+
+# Calculate the ratio - LIVE UPDATE
+amount_to_balance_ratio = tx_amount / sender_balance if sender_balance > 0 else 0
+
+# Display the ratio card with animated transfer icon
+st.markdown(f"""
+<div class="ratio-display">
+    <div class="ratio-label">
+        <span class="transfer-icon"></span>
+        Amount to Sender Balance Ratio
+    </div>
+    <div class="ratio-value">{amount_to_balance_ratio:.4f}</div>
+</div>
+""", unsafe_allow_html=True)
+
+# Warning if amount exceeds balance
+if tx_amount > sender_balance:
+    st.markdown('<div class="warning-box">⚠️ Transaction amount exceeds sender balance</div>', unsafe_allow_html=True)
+
+# Transaction Timing Section
+render_section_header("🕐", "Transaction Timing")
+
+col5, col6 = st.columns(2)
+with col5:
+    render_field_label("Day of Week")
+    day_options = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    day_display = st.selectbox(
+        "day", 
+        options=day_options, 
+        index=0, 
+        label_visibility="collapsed", 
+        key="day_week"
+    )
+    day_of_week = day_options.index(day_display)
+
+with col6:
+    render_field_label("Hour of Transaction")
+    hour = st.slider(
+        "hour", 
+        min_value=0, 
+        max_value=23, 
+        value=14, 
+        label_visibility="collapsed", 
+        key="hour_slider"
+    )
     
-    col_a, col_b = st.columns(2)
-    with col_a:
-        st.markdown('<label style="color: var(--text-primary); font-weight: 600;">Transaction Amount</label>', unsafe_allow_html=True)
-        transaction_amount = st.number_input("Transaction Amount", min_value=0.0, label_visibility="collapsed", key="amt")
+    if 5 <= hour < 12:
+        period, color = "Morning", "#fbbf24"
+    elif 12 <= hour < 17:
+        period, color = "Afternoon", "#f59e0b"
+    elif 17 <= hour < 21:
+        period, color = "Evening", "#a855f7"
+    else:
+        period, color = "Night", "#3b82f6"
     
-    with col_b:
-        st.markdown('<label style="color: var(--text-primary); font-weight: 600;">Sender Initial Balance</label>', unsafe_allow_html=True)
-        sender_balance = st.number_input("Sender Initial Balance", min_value=0.0, label_visibility="collapsed", key="sb")
-    
-    col_c, col_d = st.columns(2)
-    with col_c:
-        st.markdown('<label style="color: var(--text-primary); font-weight: 600;">Sender Behavior ID</label>', unsafe_allow_html=True)
-        sender_behavior_id = st.selectbox("Sender Behavior ID", ["BehaviorID-12345", "BehaviorID-67890", "BehaviorID-54321", "BehaviorID-09876"], label_visibility="collapsed")
-    
-    with col_d:
-        st.markdown('<label style="color: var(--text-primary); font-weight: 600;">Receiver Initial Balance</label>', unsafe_allow_html=True)
-        receiver_balance = st.number_input("Receiver Initial Balance", min_value=0.0, label_visibility="collapsed", key="rb")
-    
-    col_e, col_f = st.columns(2)
-    with col_e:
-        st.markdown('<label style="color: var(--text-primary); font-weight: 600;">Day of the Week</label>', unsafe_allow_html=True)
-        day_of_week = st.selectbox("Day of the Week", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], label_visibility="collapsed")
-    
-    with col_f:
-        st.markdown('<label style="color: var(--text-primary); font-weight: 600;">Hour</label>', unsafe_allow_html=True)
-        hour = st.number_input("Hour", min_value=0, max_value=23, label_visibility="collapsed", key="hr")
-    
-    st.markdown("<div style='height: 24px;'></div>", unsafe_allow_html=True)
-    
-    if st.button("🔮 Predict", use_container_width=True):
-        result = get_fraud_prediction(transaction_amount, sender_balance, receiver_balance, sender_behavior_id, day_of_week, int(hour))
+    st.markdown(f'<div class="time-badge" style="color: {color};">{hour:02d}:00 • {period}</div>', unsafe_allow_html=True)
+
+# Spacer
+st.markdown("<br>", unsafe_allow_html=True)
+
+# Button
+col_l, col_c, col_r = st.columns([1, 2, 1])
+with col_c:
+    predict_disabled = tx_amount > sender_balance
+    if st.button("🔍 Analyze Transaction", key="predict_btn", disabled=predict_disabled, use_container_width=True):
+        
+        st.session_state.prediction_input = {
+            "amount_to_balance_ratio": amount_to_balance_ratio,
+            "sender_behavior_id": sender_behavior_id,
+            "tx_amount": tx_amount,
+            "sender_balance": sender_balance,
+            "receiver_balance": receiver_balance,
+            "day_of_week": day_of_week,
+            "hour": hour
+        }
+        
+        # Mock prediction result
+        result = {
+            "is_fraud": amount_to_balance_ratio > 0.5 if sender_balance > 0 else True,
+            "confidence": 0.87,
+            "risk_score": amount_to_balance_ratio if sender_balance > 0 else 1.0
+        }
+        
         st.session_state.prediction_result = result
         st.switch_page("pages/03_Results.py")
+
+st.markdown('<div class="security-note">🔒 Your data is encrypted and secure</div>', unsafe_allow_html=True)
+
+# End form wrapper
+end_form_wrapper()
