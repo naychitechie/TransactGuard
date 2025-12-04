@@ -19,7 +19,7 @@ with col2:
     
     with col_b:
         st.markdown('<label style="color: var(--text-primary); font-weight: 600;">Sender Initial Balance</label>', unsafe_allow_html=True)
-        sender_balance = st.number_input("Sender Initial Balance", min_value=0.0, label_visibility="collapsed", key="sb")
+        sender_init_balance = st.number_input("Sender Initial Balance", min_value=0.0, label_visibility="collapsed", key="sb")
     
     col_c, col_d = st.columns(2)
     with col_c:
@@ -33,7 +33,8 @@ with col2:
     col_e, col_f = st.columns(2)
     with col_e:
         st.markdown('<label style="color: var(--text-primary); font-weight: 600;">Day of the Week</label>', unsafe_allow_html=True)
-        day_of_week = st.selectbox("Day of the Week", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], label_visibility="collapsed")
+        day_of_week_name = st.selectbox("Day of the Week", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], label_visibility="collapsed")
+        day_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].index(day_of_week_name)
     
     with col_f:
         st.markdown('<label style="color: var(--text-primary); font-weight: 600;">Hour</label>', unsafe_allow_html=True)
@@ -41,7 +42,30 @@ with col2:
     
     st.markdown("<div style='height: 24px;'></div>", unsafe_allow_html=True)
     
+    # TODO: Replace with user inputs
+    transaction_amount=1000
+    sender_init_balance=10000
+    sender_behavior_id=1
+    receiver_initial_balance=60000
+    receiver_behavior_id=1
+    amount_to_sender_balance_ratio=transaction_amount / (sender_init_balance + 1e-5)
+    #low_balance_flag=sender_init_balance < 1000
+    low_balance_flag=0
+    hour=5
+    day_of_week=0
+
     if st.button("🔮 Predict", use_container_width=True):
-        result = get_fraud_prediction(transaction_amount, sender_balance, receiver_balance, sender_behavior_id, day_of_week, int(hour))
+        result =  get_fraud_prediction(
+                        transaction_amount, 
+                        sender_init_balance,
+                        sender_behavior_id,
+                        receiver_initial_balance,
+                        receiver_behavior_id,
+                        int(hour),
+                        day_of_week,
+                        amount_to_sender_balance_ratio,
+                        low_balance_flag
+                    )
+        
         st.session_state.prediction_result = result
         st.switch_page("pages/03_Results.py")
