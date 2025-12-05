@@ -47,10 +47,7 @@ with col2:
     sender_init_balance=10000
     sender_behavior_id=1
     receiver_initial_balance=60000
-    receiver_behavior_id=1
     amount_to_sender_balance_ratio=transaction_amount / (sender_init_balance + 1e-5)
-    #low_balance_flag=sender_init_balance < 1000
-    low_balance_flag=0
     hour=5
     day_of_week=0
 
@@ -60,12 +57,10 @@ with col2:
                         sender_init_balance,
                         sender_behavior_id,
                         receiver_initial_balance,
-                        receiver_behavior_id,
                         int(hour),
                         day_of_week,
-                        amount_to_sender_balance_ratio,
-                        low_balance_flag
+                        amount_to_sender_balance_ratio
                     )
-        
+
         st.session_state.prediction_result = result
         st.switch_page("pages/03_Results.py")
