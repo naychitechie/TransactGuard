@@ -141,7 +141,102 @@ st.markdown("""
     font-weight: 600 !important;
     color: #94a3b8 !important;
     font-size: 12px !important;
-}             
+} 
+
+              /* The OUTER wrapper - this is what we want to style */
+    section[data-testid="stMain"] div.stSelectbox > div > div:first-child {
+        background: rgba(10, 14, 39, 0.95) !important;
+        border: 3px solid rgba(13, 110, 253, 0.6) !important;
+        border-radius: 12px !important;
+        min-height: 48px !important;
+        padding: 0 18px !important;
+        box-shadow: 
+            0 0 25px rgba(13, 110, 253, 0.3) !important,
+            inset 0 0 20px rgba(13, 110, 253, 0.08) !important;
+        display: flex !important;
+        align-items: center !important;
+        transition: all 0.3s ease !important;
+        overflow: hidden !important;
+    }
+     @keyframes selectCyanGlow {
+        0%, 100% { 
+            border-color: #0d6efd !important;
+            box-shadow: 
+                0 0 45px rgba(13, 110, 253, 0.65),
+                0 0 35px rgba(138, 43, 226, 0.45),
+                inset 0 0 40px rgba(13, 110, 253, 0.18) !important;
+        }
+        50% { 
+            border-color: #8a2be2 !important;
+            box-shadow: 
+                0 0 55px rgba(138, 43, 226, 0.75),
+                0 0 45px rgba(13, 110, 253, 0.55),
+                inset 0 0 50px rgba(138, 43, 226, 0.25) !important;
+        }
+    }
+    
+    /* Hover */
+    section[data-testid="stMain"] div.stSelectbox > div > div:first-child:hover {
+        border-color: rgba(13, 110, 253, 0.85) !important;
+        box-shadow: 
+            0 0 35px rgba(13, 110, 253, 0.5) !important,
+            inset 0 0 25px rgba(13, 110, 253, 0.12) !important;
+    }
+    
+    /* CRITICAL: Remove the brackets { } by hiding inner baseweb select borders */
+    section[data-testid="stMain"] div.stSelectbox [data-baseweb="select"],
+    section[data-testid="stMain"] div.stSelectbox [data-baseweb="select"] *,
+    section[data-testid="stMain"] div.stSelectbox [role="button"],
+    section[data-testid="stMain"] div.stSelectbox [role="button"] * {
+        border: none !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-top: none !important;
+        border-bottom: none !important;
+        border-width: 0 !important;
+        border-style: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+    
+    /* Force transparent on EVERYTHING inside */
+    section[data-testid="stMain"] div.stSelectbox div[class*="css-"],
+    section[data-testid="stMain"] div.stSelectbox div[class^="st-"] {
+        border: none !important;
+        background: transparent !important;
+    }
+    
+    /* Text */
+    section[data-testid="stMain"] div.stSelectbox span {
+        color: #ffffff !important;
+        font-size: 1.05rem !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Arrow */
+    section[data-testid="stMain"] div.stSelectbox svg {
+        fill: #0d6efd !important;
+        width: 24px !important;
+        height: 24px !important;
+        filter: drop-shadow(0 4px 18px rgba(13,110,253,0.8)) !important;
+    }
+    
+    section[data-testid="stMain"] div.stSelectbox:hover svg {
+        fill: #0d6efd !important;
+        filter: drop-shadow(0 5px 22px rgba(13,110,253,0.9)) !important;
+    }
+    
+    /* Dropdown Menu */
+    div[data-baseweb="menu"] {
+        background: linear-gradient(180deg, rgba(10,14,39,0.98), rgba(10,14,39,0.96)) !important;
+        border: 2px solid rgba(13, 110, 253, 0.3) !important;
+        border-radius: 10px !important;
+        box-shadow: 0 0 25px rgba(13, 110, 253, 0.22), inset 0 2px 8px rgba(13,110,253,0.02) !important;
+        backdrop-filter: blur(2px);
+        margin-top: 5px;
+    }
+                                   
 
  /* Button Styling - responsive */
     section[data-testid="stMain"] .stButton > button {
@@ -441,7 +536,7 @@ with col_right:
         <h4>Plot Controls</h4>
     """, unsafe_allow_html=True)
     
-    st.markdown('<div class="data-page-selectbox">', unsafe_allow_html=True)
+    # st.markdown('<div class="data-page-selectbox">', unsafe_allow_html=True)
     
     # Use native labels for a cleaner look and automatic updates
     x_axis = st.selectbox(
@@ -456,7 +551,7 @@ with col_right:
         key="y_axis", 
         index=list(df.columns).index('SENDER_INIT_BALANCE'),
     )
-    st.markdown('</div>', unsafe_allow_html=True)
+    # st.markdown('</div>', unsafe_allow_html=True)
             
     st.markdown('<div class="control-section"><h4>Visualization Type</h4></div>', unsafe_allow_html=True)
     st.markdown('<div class="viz-button-container">', unsafe_allow_html=True)
