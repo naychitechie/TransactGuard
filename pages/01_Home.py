@@ -24,9 +24,9 @@ st.markdown(f"""
 <div class="hero-section-wrapper">
     <img class="hero-bg" src="{data_uri}" alt="Hero background" />
     <div class="hero-text-overlay">
-        <h1 class="hero-title">Fraud Transaction Prediction</h1>
+        <h1 class="hero-title">Real-Time Fraud Detection Powered by AI</h1>
         <p style="font-size: 16px; color: var(--text-secondary); max-width: 800px; margin: 24px auto;">
-            Predict fraudulent transactions with precision and confidence. Our advanced algorithms analyze transaction data in real-time.
+            Detect high-risk transactions instantly with advanced machine-learning models engineered for accuracy, speed, and trust.
         </p>
     </div>
 </div>
