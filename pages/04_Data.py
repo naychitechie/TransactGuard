@@ -9,7 +9,7 @@ from scipy import stats
 
 st.set_page_config(page_title="Data - TransactGuard", layout="wide", initial_sidebar_state="expanded")
 apply_dark_theme()
-render_sidebar()
+# render_sidebar()
 
 # Custom CSS for better styling
 st.markdown("""
@@ -131,24 +131,9 @@ st.markdown("""
     margin-bottom: 16px;
 }
 
-.stButton > button {
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 12px;
-    transition: all 0.2s ease;
-}
-
 .checkbox-container {
     margin: 8px 0;
     font-style: normal;
-}
-
-/* Apply stat-label styles to checkbox labels */
-.checkbox-container .stCheckbox label {
-    font-weight: 600 !important;
-    color: #94a3b8 !important;
-    font-size: 12px !important;
-    font-style: normal !important;
 }
 
 /* Apply stat-label styles to selectbox labels in the right column */
@@ -160,13 +145,76 @@ st.markdown("""
 
 /* Custom styles for visualization buttons */
 .viz-button-container .stButton button {
-    background-color: rgba(30, 41, 59, 0.8) !important;
-    border: 1px solid #475569 !important;
+    background: linear-gradient(135deg, #0d6efd 0%, #8a2be2 100%) !important;
+        color: #fff !important;
+        font-weight: 700 !important;
+        border-radius: 12px !important;
+        border: none !important;
+        box-shadow: 0 8px 26px rgba(13, 110, 253, 0.32) !important;
+        text-transform: uppercase !important;
+        letter-spacing: 3.5px !important;
+        transition: all 0.3s ease !important;
+        min-height: 52px !important;
+        animation: buttonGlow 3s ease-in-out infinite;
+        line-height: 1.1 !important;
 }
+
+/* Hover state for the small visualization buttons */
 .viz-button-container .stButton button:hover {
     background-color: rgba(51, 65, 85, 0.9) !important;
     border-color: #64748b !important;
 }
+                    
+/* Custom styles for the small visualization buttons */
+# .viz-button-container .stButton > button {
+#     background: rgba(30, 41, 59, 0.8) !important;
+#     border: 1px solid #475569 !important;
+#     color: #cbd5e1 !important;
+#     font-size: 0.9rem !important;
+#     font-weight: 600 !important;
+#     letter-spacing: 0.5px !important;
+#     text-transform: none !important;
+#     padding: 0.75rem 0.5rem !important;
+#     min-height: 40px !important;
+#     animation: none !important;
+#     box-shadow: none !important;
+# }
+
+/* Local Selectbox Styling to override global defaults */
+.data-page-selectbox .stSelectbox > div > div {
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    border: 1px solid rgba(148, 163, 184, 0.2) !important;
+    border-radius: 8px !important;
+    color: #e2e8f0 !important;
+}
+.data-page-selectbox .stSelectbox div[data-baseweb="select"] > div {
+    background-color: transparent !important;
+    color: #e2e8f0 !important;
+}
+            
+.data-page-selectbox .stSelectbox div[data-baseweb="select"] * {
+    background-color: transparent !important;
+}
+                  
+
+/* Specific style for a primary action button on the Data page */
+.data-primary-button .stButton > button {
+        background: linear-gradient(135deg, #0d6efd 0%, #8a2be2 100%) !important;
+        color: #fff !important;
+        font-weight: 700 !important;
+        font-size: 1.2rem !important;
+        padding: 1rem 2.2rem !important;
+        border-radius: 12px !important;
+        border: none !important;
+        box-shadow: 0 8px 26px rgba(13, 110, 253, 0.32) !important;
+        text-transform: uppercase !important;
+        letter-spacing: 3.5px !important;
+        transition: all 0.3s ease !important;
+        min-height: 52px !important;
+        animation: buttonGlow 3s ease-in-out infinite;
+        line-height: 1.1 !important;
+}
+            
 </style>
 """, unsafe_allow_html=True)
 
@@ -196,13 +244,14 @@ def create_scatter_plot(df, x_col, y_col, show_trend=False):
     fraud_mask = df["IS_FRAUD"] == 1
     
     fig = go.Figure()
+
     fig.add_trace(go.Scatter(
         x=df[~fraud_mask][x_col],
         y=df[~fraud_mask][y_col],
         mode='markers',
         marker=dict(size=6, color='#0ea5e9', opacity=0.6),
         name='Legitimate',
-        hovertemplate=f'<b><span style="color: #94a3b8;">Legitimate</span></b><br>{x_col}: %{{x}}<br>{y_col}: %{{y}}<extra></extra>'
+        hovertemplate=f'<b>Legitimate</b><br><br><b>{x_col}:</b> %{{x}}<br><b>{y_col}:</b> %{{y}}<extra></extra>'
     ))
     fig.add_trace(go.Scatter(
         x=df[fraud_mask][x_col],
@@ -210,7 +259,7 @@ def create_scatter_plot(df, x_col, y_col, show_trend=False):
         mode='markers',
         marker=dict(size=8, color='#f43f5e', opacity=0.8),
         name='Fraudulent',
-        hovertemplate=f'<b><span style="color: #94a3b8;">Fraudulent</span></b><br>{x_col}: %{{x}}<br>{y_col}: %{{y}}<extra></extra>'
+        hovertemplate=f'<b>Fraudulent</b><br><br><b>{x_col}:</b> %{{x}}<br><b>{y_col}:</b> %{{y}}<extra></extra>'
     ))
     
     if show_trend:
@@ -234,7 +283,11 @@ def create_scatter_plot(df, x_col, y_col, show_trend=False):
         plot_bgcolor='rgba(15, 23, 42, 0.5)',
         paper_bgcolor='rgba(0, 0, 0, 0)',
         hovermode='closest',
-        margin=dict(l=50, r=50, t=50, b=50)
+        margin=dict(l=50, r=50, t=50, b=50),
+        hoverlabel=dict(
+            bgcolor="#1e293b",
+            font_color="#cbd5e1" # Set global font color for the tooltip
+        )
     )
     fig.update_xaxes(gridcolor='rgba(148, 163, 184, 0.1)', showgrid=True)
     fig.update_yaxes(gridcolor='rgba(148, 163, 184, 0.1)', showgrid=True)
@@ -251,6 +304,7 @@ def create_line_plot(df, x_col, y_col):
         y=df_sorted[~fraud_mask][y_col],
         mode='lines+markers',
         name='Legitimate',
+        hovertemplate=f'<b>Legitimate</b><br><br><b>{x_col}:</b> %{{x}}<br><b>{y_col}:</b> %{{y}}<extra></extra>',
         line=dict(color='#0ea5e9', width=2),
         marker=dict(size=5)
     ))
@@ -259,6 +313,7 @@ def create_line_plot(df, x_col, y_col):
         y=df_sorted[fraud_mask][y_col],
         mode='lines+markers',
         name='Fraudulent',
+        hovertemplate=f'<b>Fraudulent</b><br><br><b>{x_col}:</b> %{{x}}<br><b>{y_col}:</b> %{{y}}<extra></extra>',
         line=dict(color='#f43f5e', width=2),
         marker=dict(size=6)
     ))
@@ -272,7 +327,12 @@ def create_line_plot(df, x_col, y_col):
         font=dict(size=11, color='#cbd5e1'),
         plot_bgcolor='rgba(15, 23, 42, 0.5)',
         paper_bgcolor='rgba(0, 0, 0, 0)',
-        margin=dict(l=50, r=50, t=50, b=50)
+        margin=dict(l=50, r=50, t=50, b=50),
+        hovermode='x unified',
+        hoverlabel=dict(
+            bgcolor="#1e293b",
+            font_color="#cbd5e1" # Set global font color for the tooltip
+        )
     )
     fig.update_xaxes(gridcolor='rgba(148, 163, 184, 0.1)', showgrid=True)
     fig.update_yaxes(gridcolor='rgba(148, 163, 184, 0.1)', showgrid=True)
@@ -325,6 +385,7 @@ def create_box_plot(df, x_col, y_col):
         fig.add_trace(go.Box(
             y=data[y_col],
             name=name,
+            hovertemplate=f'<b>{name}</b><br><b>{y_col}:</b> %{{y}}<extra></extra>',
             marker=dict(color=color),
             boxmean='sd'
         ))
@@ -332,12 +393,17 @@ def create_box_plot(df, x_col, y_col):
     fig.update_layout(
         title=dict(text=f"Box Plot: Distribution by Fraud Status", font=dict(size=16, color='#e2e8f0')),
         yaxis_title=y_col,
+        xaxis_title="Status",
         template="plotly_dark",
         height=450,
         font=dict(size=11, color='#cbd5e1'),
         plot_bgcolor='rgba(15, 23, 42, 0.5)',
         paper_bgcolor='rgba(0, 0, 0, 0)',
-        margin=dict(l=50, r=50, t=50, b=50)
+        margin=dict(l=50, r=50, t=50, b=50),
+        hoverlabel=dict(
+            bgcolor="#1e293b",
+            font_color="#cbd5e1" # Set global font color for the tooltip
+        )
     )
     fig.update_yaxes(gridcolor='rgba(148, 163, 184, 0.1)', showgrid=True)
     return fig
@@ -352,7 +418,7 @@ df = load_real_data()
 if df is None:
     st.stop()
 
-st.markdown('<div style="margin-bottom: 32px;"><h1 style="color: #e2e8f0; font-size: 36px; font-weight: 800; margin: 0;">Interactive Data Explorer</h1></div>', unsafe_allow_html=True)
+st.markdown('<div style="margin-bottom: 32px;"><h1 style="color: #e2e8f0; font-size: 36px; font-weight: 800; margin: 0; text-align: center;">Interactive Data Explorer</h1></div>', unsafe_allow_html=True)
 
 col_left, col_center, col_right = st.columns([1, 3, 1.5], gap="small")
 
@@ -364,10 +430,6 @@ with col_left:
         <div class="stat-row">
             <span class="stat-label">Total Records</span>
             <span class="stat-value">{len(df):,}</span>
-        </div>
-        <div class="stat-row">
-            <span class="stat-label">Date Range</span>
-            <span class="stat-value">Sample Data</span>
         </div>
         <div class="stat-row">
             <span class="stat-label">Total Columns</span>
@@ -399,14 +461,14 @@ with col_left:
     """, unsafe_allow_html=True)
     
     # High-Fraud Insights Card
-    st.markdown("""
-    <div class="data-card">
-        <h4>High-Fraud Insights</h4>
-        <div class="insight-item">Low balance accounts show 3x higher fraud risk</div>
-        <div class="insight-item">Transactions over $5K require manual review</div>
-        <div class="insight-item">Q4 sees 24% spike in fraudulent activity</div>
-    </div>
-    """, unsafe_allow_html=True)
+    # st.markdown("""
+    # <div class="data-card">
+    #     <h4>High-Fraud Insights</h4>
+    #     <div class="insight-item">Low balance accounts show 3x higher fraud risk</div>
+    #     <div class="insight-item">Transactions over $5K require manual review</div>
+    #     <div class="insight-item">Q4 sees 24% spike in fraudulent activity</div>
+    # </div>
+    # """, unsafe_allow_html=True)
 
 with col_center:
     # This block will be executed after the controls in the right column are rendered
@@ -418,6 +480,8 @@ with col_right:
         <h4>Plot Controls</h4>
     """, unsafe_allow_html=True)
     
+    st.markdown('<div class="data-page-selectbox">', unsafe_allow_html=True)
+    
     # Use native labels for a cleaner look and automatic updates
     x_axis = st.selectbox(
         "X-Axis", 
@@ -425,15 +489,15 @@ with col_right:
         key="x_axis", 
         index=list(df.columns).index('TX_AMOUNT'),
     )
-    
     y_axis = st.selectbox(
         "Y-Axis", 
         df.columns, 
         key="y_axis", 
         index=list(df.columns).index('SENDER_INIT_BALANCE'),
     )
-
-    st.markdown('<div class="control-section"><h5>Visualization Type</h5></div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+            
+    st.markdown('<div class="control-section"><h4>Visualization Type</h4></div>', unsafe_allow_html=True)
     st.markdown('<div class="viz-button-container">', unsafe_allow_html=True)
     col_viz1, col_viz2 = st.columns(2)
     with col_viz1:
@@ -456,28 +520,28 @@ with col_right:
             st.rerun()
     st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="control-section"><h4>Customization & Statistics</h4></div>', unsafe_allow_html=True)
-    st.markdown('<div class="checkbox-container">', unsafe_allow_html=True)
-    show_trend = st.checkbox("Show Trendline", value=st.session_state.get('show_trend', False), key="show_trend")
-    show_pearson = st.checkbox("Pearson Correlation", value=False)
-    st.markdown('</div>', unsafe_allow_html=True)
+    # st.markdown('<div class="control-section"><h4>Customization & Statistics</h4></div>', unsafe_allow_html=True)
+    # st.markdown('<div class="checkbox-container">', unsafe_allow_html=True)
+    # show_trend = st.checkbox("Show Trendline", value=st.session_state.get('show_trend', False), key="show_trend")
+    # show_pearson = st.checkbox("Pearson Correlation", value=False)
+    # st.markdown('</div>', unsafe_allow_html=True)
     
     # Display statistics if requested
-    if show_pearson:
-        # Add a small top margin to separate from the checkbox
-        st.markdown('<div style="margin-top: 12px;"></div>', unsafe_allow_html=True)
-        try:
-            corr, p_value = stats.pearsonr(df[x_axis].dropna(), df[y_axis].dropna())
-            st.markdown(f"""
-            <div style="background: rgba(30, 58, 138, 0.3); border-left: 3px solid #38bdf8; padding: 12px; border-radius: 4px; margin-top: 12px; font-size: 12px;">
-            <strong>Pearson Correlation:</strong> {corr:.4f}<br>
-            <strong>P-Value:</strong> {p_value:.4e}
-            </div>
-            """, unsafe_allow_html=True)
-        except (ValueError, TypeError):
-            st.info("Cannot compute correlation for this column pair.")
+    # if show_pearson:
+    #     # Add a small top margin to separate from the checkbox
+    #     st.markdown('<div style="margin-top: 12px;"></div>', unsafe_allow_html=True)
+    #     try:
+    #         corr, p_value = stats.pearsonr(df[x_axis].dropna(), df[y_axis].dropna())
+    #         st.markdown(f"""
+    #         <div style="background: rgba(30, 58, 138, 0.3); border-left: 3px solid #38bdf8; padding: 12px; border-radius: 4px; margin-top: 12px; font-size: 12px;">
+    #         <strong>Pearson Correlation:</strong> {corr:.4f}<br>
+    #         <strong>P-Value:</strong> {p_value:.4e}
+    #         </div>
+    #         """, unsafe_allow_html=True)
+    #     except (ValueError, TypeError):
+    #         st.info("Cannot compute correlation for this column pair.")
     
-    st.markdown('</div>', unsafe_allow_html=True)
+    # st.markdown('</div>', unsafe_allow_html=True)
 
 # Now, render the plot in the center column using the values from the controls
 with col_center:
@@ -497,6 +561,7 @@ with col_center:
         else:
             fig = create_scatter_plot(df, x_axis, y_axis, show_trend)
         
-        st.plotly_chart(fig, use_container_width=True)
+        #  To remove the toolbar/unnecessary buttons for a cleaner look
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
     except Exception as e:
         st.error(f"Error creating visualization: {str(e)}")
