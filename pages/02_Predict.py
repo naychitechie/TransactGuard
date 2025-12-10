@@ -3,7 +3,7 @@ import streamlit as st
 from src.styles import apply_dark_theme, render_sidebar
 from src.prediction_service import get_fraud_prediction
 
-st.set_page_config(page_title="Predict - TransactGuard", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Predict - TransactGuard", layout="wide", initial_sidebar_state="expanded")
 apply_dark_theme()
 render_sidebar()
 
@@ -41,7 +41,7 @@ with col2:
     
     st.markdown("<div style='height: 24px;'></div>", unsafe_allow_html=True)
     
-    if st.button("🔮 Predict", use_container_width=True):
+    if st.button("Predict", use_container_width=True):
         result = get_fraud_prediction(transaction_amount, sender_balance, receiver_balance, sender_behavior_id, day_of_week, int(hour))
         st.session_state.prediction_result = result
         st.switch_page("pages/03_Results.py")

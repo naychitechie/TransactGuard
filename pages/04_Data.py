@@ -5,7 +5,7 @@ import numpy as np
 import plotly.graph_objects as go
 from src.styles import apply_dark_theme, render_sidebar
 
-st.set_page_config(page_title="Data - TransactGuard", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Data - TransactGuard", layout="wide", initial_sidebar_state="expanded")
 apply_dark_theme()
 render_sidebar()
 
@@ -64,5 +64,5 @@ with col_right:
     x_axis = st.selectbox("X-Axis", df.columns)
     y_axis = st.selectbox("Y-Axis", df.columns, index=1)
     show_trend = st.checkbox("Show Trendline", value=True)
-    if st.button("🔄 Update Plot"):
+    if st.button("Update Plot"):
         st.info("Plot updated!")
