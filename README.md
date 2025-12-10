@@ -46,8 +46,7 @@ streamlit run app.py
 
 ## Features
 
-- Dark theme UI matching mockups
-- Right-aligned sidebar navigation
-- Mock prediction engine (Phase 4-ready)
+- Dark theme UI
+- Prediction engine
 - Interactive data explorer with Plotly
 - Session state management
