@@ -292,9 +292,9 @@ def apply_dark_theme():
     .hero-section-wrapper {
         position: relative;
         margin: 0 auto 32px auto;
-        width: 100vw;
-        margin-left: calc(-50vw + 50%);
-        padding: 0;
+        max-width: 1200px;
+        width: 100%;
+        padding: 0 32px;
     }
 
     .hero-section-wrapper img {
@@ -393,7 +393,7 @@ def apply_dark_theme():
     </style>
 
     <div class="top-nav">
-      <a class="nav-left" href="/Home" data-page="Home" style="cursor: pointer;">
+      <a class="nav-left" href="/Home" data-page="Home" style="cursor: pointer;" target="_self">
         <svg class="shield-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <defs>
             <linearGradient id="g1" x1="0%" x2="100%" y1="0%" y2="100%">
@@ -414,12 +414,12 @@ def apply_dark_theme():
         <span class="brand-text">TransactGuard</span>
       </a>
       <div class="nav-center">
-        <a class="nav-link" href="/Data" data-page="Data" style="cursor: pointer;">Data</a>
-        <a class="nav-link" href="/Results" data-page="Results" style="cursor: pointer;">Results</a>
-        <a class="nav-link" href="/About" data-page="About" style="cursor: pointer;">About</a>
+        <a class="nav-link" href="/Data" data-page="Data" style="cursor: pointer;" target="_self">Data</a>
+        <a class="nav-link" href="/Results" data-page="Results" style="cursor: pointer;" target="_self">Results</a>
+        <a class="nav-link" href="/About" data-page="About" style="cursor: pointer;" target="_self">About</a>
       </div>
       <div class="nav-right">
-        <a class="nav-cta" href="/Predict" data-page="Predict" style="cursor: pointer;">Predict</a>
+        <a class="nav-cta" href="/Predict" data-page="Predict" style="cursor: pointer;" target="_self">Predict</a>
       </div>
     </div>
 
