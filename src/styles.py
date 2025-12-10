@@ -32,7 +32,7 @@ def apply_dark_theme():
     <style>
     :root {
         /* Palette tokens (user-provided) */
-        --bg-page: #0A0620;
+        --bg-page: #07041A;
         --bg-card: #07061A;
 
         --text-heading: #F9FAFB;   /* large section headings */
@@ -181,10 +181,7 @@ def apply_dark_theme():
         padding: 0;
         font-family: var(--font-stack);
         color: var(--text-secondary);
-        background: radial-gradient(circle at bottom,
-                    rgba(148, 93, 255, 0.32) 0,
-                    rgba(10, 6, 32, 1) 55%,
-                    rgba(5, 3, 16, 1) 100%);
+        background: #07041A;
     }
 
     /* Ensure headings and navigation use the same sans-serif stack */
@@ -227,15 +224,15 @@ def apply_dark_theme():
         pointer-events: none !important;
         overflow: hidden !important;
     }
-    .nav-left { display: flex; align-items: center; gap: 10px; color: var(--text-accent); font-weight: 800; font-size: 22px; text-decoration: none; }
+    .nav-left { display: flex; align-items: center; gap: 10px; color: var(--text-accent); font-weight: 800; font-size: 22px; text-decoration: none; flex: 1; }
     .nav-center { display: flex; gap: 8px; align-items: center; justify-content: center; flex: 1; }
-    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .nav-right { display: flex; align-items: center; gap: 10px; flex: 1; justify-content: flex-end; }
     .nav-link {
         color: var(--nav-link) !important;
         text-decoration: none;
-        font-size: 15px;
-        font-weight: 600;
-        padding: 8px 10px;
+        font-size: 16px;
+        font-weight: 700;
+        padding: 8px 12px;
         border-radius: 10px;
         transition: all 0.18s ease;
     }
@@ -246,19 +243,68 @@ def apply_dark_theme():
     .nav-spacer { display: none; } /* to balance space on right for alignment */
 
     /* Animated brand + shield */
-    .nav-left { display: flex; align-items: center; gap: 12px; color: var(--text-accent); font-weight: 800; font-size: 20px; text-decoration: none !important; }
+    .nav-left { display: flex; align-items: center; gap: 12px; color: var(--text-accent); font-weight: 800; font-size: 20px; text-decoration: none !important; flex: 1; }
     .nav-left:hover { text-decoration: none !important; }
     .nav-cta {
-        background: linear-gradient(120deg, #9d7cff, #59e6ff);
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #9487FF, #59e6ff, #b48dff);
+        background-size: 220% 220%;
         color: #0b0a1c !important;
-        border: 1px solid rgba(199, 187, 248, 0.35);
-        padding: 10px 16px;
-        border-radius: 12px;
-        font-weight: 700;
+        border: 1px solid rgba(199, 187, 248, 0.45);
+        padding: 11px 18px;
+        border-radius: 14px;
+        font-weight: 800;
         text-decoration: none !important;
-        box-shadow: 0 10px 30px rgba(124,91,255,0.45);
+        box-shadow: 0 12px 44px rgba(148,135,255,0.6), 0 0 40px rgba(148,135,255,0.55);
+        animation: sheen 6s ease-in-out infinite, pulseGlow 2.2s ease-in-out infinite;
+        isolation: isolate;
+        color: #0b0a1c !important;
     }
-    .nav-cta:hover { filter: brightness(1.05); transform: translateY(-1px); }
+    .nav-cta-text {
+        position: relative;
+        z-index: 3;
+    }
+    /* Animated paint stroke around the button */
+    .nav-cta::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        border-radius: 16px;
+        background: conic-gradient(from 0deg, #9487FF, #59e6ff, #b48dff, #9487FF);
+        animation: paintSweep 2.8s linear infinite;
+        z-index: 1;
+        -webkit-mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        padding: 3px;
+    }
+    .nav-cta::after {
+        content: "";
+        position: absolute;
+        inset: 2px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.08));
+        z-index: 2;
+    }
+    /* Hide old sparkles */
+    .nav-cta .sparkle { display: none !important; }
+
+    .nav-cta:hover { filter: brightness(1.06); transform: translateY(-1px); }
+    @keyframes sheen {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    @keyframes pulseGlow {
+        0%, 100% { box-shadow: 0 12px 44px rgba(148,135,255,0.6), 0 0 40px rgba(148,135,255,0.55); }
+        50% { box-shadow: 0 16px 56px rgba(148,135,255,0.7), 0 0 52px rgba(148,135,255,0.65); }
+    }
+    @keyframes paintSweep {
+        to { transform: rotate(360deg); }
+    }
     .shield-svg { width: 38px; height: 38px; display: inline-block; transform-origin: center; filter: drop-shadow(0 10px 30px rgba(168,85,255,0.18)); animation: float 2.8s ease-in-out infinite, pulse 1.6s ease-in-out infinite; }
     @keyframes float { 0% { transform: translateY(0px) rotateZ(0deg); } 25% { transform: translateY(-10px) rotateZ(2deg); } 50% { transform: translateY(-2px) rotateZ(-2deg); } 75% { transform: translateY(-10px) rotateZ(2deg); } 100% { transform: translateY(0px) rotateZ(0deg); } }
     @keyframes pulse { 0% { filter: drop-shadow(0 10px 30px rgba(168,85,255,0.18)); } 50% { filter: drop-shadow(0 15px 50px rgba(168,85,255,0.45)); } 100% { filter: drop-shadow(0 10px 30px rgba(168,85,255,0.18)); } }
@@ -292,9 +338,9 @@ def apply_dark_theme():
     .hero-section-wrapper {
         position: relative;
         margin: 0 auto 32px auto;
-        width: 100vw;
-        margin-left: calc(-50vw + 50%);
-        padding: 0;
+        max-width: 1200px;
+        width: 100%;
+        padding: 0 32px;
     }
 
     .hero-section-wrapper img {
@@ -336,6 +382,29 @@ def apply_dark_theme():
         --btn-border-strong: rgba(148, 135, 255, 0.35);
         --btn-text-glow: #ffffff;
         --btn-neon-glow: rgba(148,135,255,0.32);
+    }
+
+    /* Inputs and selects */
+    input, select, textarea, .stTextInput input, .stNumberInput input {
+        background: rgba(10, 14, 40, 0.82) !important;
+        color: #e8ecff !important;
+        border: 1px solid rgba(86, 134, 255, 0.5) !important;
+        border-radius: 14px !important;
+        padding: 12px 14px !important;
+        box-shadow:
+            inset 0 0 0 1px rgba(86, 134, 255, 0.2),
+            0 0 0 1px rgba(86, 134, 255, 0.35),
+            0 14px 28px rgba(0,0,0,0.45),
+            0 0 24px rgba(86, 134, 255, 0.28) !important;
+    }
+    input:focus, select:focus, textarea:focus, .stTextInput input:focus, .stNumberInput input:focus {
+        outline: none !important;
+        border-color: rgba(120, 170, 255, 0.85) !important;
+        box-shadow:
+            inset 0 0 0 1px rgba(120, 170, 255, 0.4),
+            0 0 0 1px rgba(120, 170, 255, 0.8),
+            0 14px 28px rgba(0,0,0,0.5),
+            0 0 28px rgba(120, 170, 255, 0.36) !important;
     }
 
     /* Apply to Streamlit buttons and common button inputs */
@@ -393,7 +462,7 @@ def apply_dark_theme():
     </style>
 
     <div class="top-nav">
-      <a class="nav-left" href="/Home" data-page="Home" style="cursor: pointer;">
+      <a class="nav-left" href="/Home" data-page="Home" style="cursor: pointer;" target="_self">
         <svg class="shield-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <defs>
             <linearGradient id="g1" x1="0%" x2="100%" y1="0%" y2="100%">
@@ -414,12 +483,20 @@ def apply_dark_theme():
         <span class="brand-text">TransactGuard</span>
       </a>
       <div class="nav-center">
-        <a class="nav-link" href="/Data" data-page="Data" style="cursor: pointer;">Data</a>
-        <a class="nav-link" href="/Results" data-page="Results" style="cursor: pointer;">Results</a>
-        <a class="nav-link" href="/About" data-page="About" style="cursor: pointer;">About</a>
+        <a class="nav-link" href="/Data" data-page="Data" style="cursor: pointer;" target="_self">Data</a>
+        <a class="nav-link" href="/Results" data-page="Results" style="cursor: pointer;" target="_self">Results</a>
+        <a class="nav-link" href="/About" data-page="About" style="cursor: pointer;" target="_self">About</a>
       </div>
       <div class="nav-right">
-        <a class="nav-cta" href="/Predict" data-page="Predict" style="cursor: pointer;">Predict</a>
+        <a class="nav-cta" href="/Predict" data-page="Predict" style="cursor: pointer;" target="_self">
+          <span class="sparkle"></span>
+          <span class="sparkle"></span>
+          <span class="sparkle"></span>
+          <span class="sparkle"></span>
+          <span class="sparkle"></span>
+          <span class="sparkle"></span>
+          <span class="nav-cta-text">Predict</span>
+        </a>
       </div>
     </div>
 
