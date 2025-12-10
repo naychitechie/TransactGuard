@@ -6,33 +6,34 @@ from src.prediction_service import get_fraud_prediction
 st.set_page_config(page_title="Predict - TransactGuard", layout="wide", initial_sidebar_state="expanded")
 apply_dark_theme()
 render_sidebar()
+predict_disabled = True
 
 # Add ONLY form-related CSS - ABSOLUTELY NO SIDEBAR STYLING
 st.markdown("""
 <style>
-    /* Main container - smaller with more top padding */
+    /* Main container - use viewport units for consistent sizing */
     .block-container {
-        max-width: 1300px !important;
-        padding: 2.5rem 1.8rem 1.5rem 1.8rem !important;
+        max-width: min(1200px, 90vw) !important;
+        padding: 3vh 2vw 2vh 2vw !important;
     }
     
-    /* Section Headers - SMALLER */
+    /* Section Headers - responsive sizing */
     .section-header {
         display: flex;
         align-items: center;
-        gap: 0.8rem;
-        margin: 1.2rem 0 0.8rem 0;
+        gap: 0.8vw;
+        margin: 1.5vh 0 1vh 0;
     }
     
     .section-icon {
-        width: 38px;
-        height: 38px;
+        width: clamp(32px, 2.5vw, 38px);
+        height: clamp(32px, 2.5vw, 38px);
         background: linear-gradient(135deg, rgba(13, 110, 253, 0.2) 0%, rgba(138, 43, 226, 0.2) 100%);
         border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.2rem;
+        font-size: clamp(1rem, 1.1vw, 1.2rem);
         flex-shrink: 0;
         animation: iconGlow 3s ease-in-out infinite;
     }
@@ -48,7 +49,7 @@ st.markdown("""
     
     .section-text {
         color: #e2e8f0;
-        font-size: 1.05rem;
+        font-size: clamp(0.9rem, 1vw, 1.05rem);
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1.5px;
@@ -59,20 +60,20 @@ st.markdown("""
         flex: 1;
         height: 2px;
         background: linear-gradient(90deg, rgba(13, 110, 253, 0.35), transparent);
-        margin-left: 0.8rem;
+        margin-left: 0.8vw;
     }
     
-    /* Input Labels - SMALLER */
+    /* Input Labels - responsive sizing */
     .field-label {
         color: #8892b0;
-        font-size: 0.9rem;
+        font-size: clamp(0.8rem, 0.85vw, 0.9rem);
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.8px;
-        margin-bottom: 0.4rem;
+        margin-bottom: 0.5vh;
         display: flex;
         align-items: center;
-        gap: 0.3rem;
+        gap: 0.3vw;
     }
     
     .label-dot {
@@ -93,7 +94,7 @@ st.markdown("""
         }
     }
     
-    /* Number Input - SMALLER SIZE */
+    /* Number Input - responsive height */
     section[data-testid="stMain"] .stNumberInput {
         height: auto !important;
     }
@@ -103,7 +104,7 @@ st.markdown("""
     }
     
     section[data-testid="stMain"] .stNumberInput > div > div {
-        height: 48px !important;
+        height: clamp(42px, 4vh, 48px) !important;
         display: flex !important;
         align-items: center !important;
     }
@@ -113,9 +114,9 @@ st.markdown("""
         border: 2px solid rgba(13, 110, 253, 0.35) !important;
         border-radius: 10px !important;
         transition: all 0.25s ease !important;
-        min-height: 48px !important;
-        height: 48px !important;
-        padding: 0 0.9rem !important;
+        min-height: clamp(42px, 4vh, 48px) !important;
+        height: clamp(42px, 4vh, 48px) !important;
+        padding: 0 0.9vw !important;
         box-shadow: 
             0 0 20px rgba(13, 110, 253, 0.3),
             inset 0 0 15px rgba(13, 110, 253, 0.05) !important;
@@ -132,12 +133,12 @@ st.markdown("""
         border: none !important;
         border-radius: 8px !important;
         color: #fff !important;
-        padding: 0 2.2rem 0 0.6rem !important;
-        font-size: 1rem !important;
+        padding: 0 2.2vw 0 0.6vw !important;
+        font-size: clamp(0.9rem, 0.95vw, 1rem) !important;
         font-weight: 600 !important;
         transition: all 0.15s ease !important;
-        min-height: 48px !important;
-        height: 48px !important;
+        min-height: clamp(42px, 4vh, 48px) !important;
+        height: clamp(42px, 4vh, 48px) !important;
         width: 100% !important;
         line-height: 1.2 !important;
         box-sizing: border-box !important;
@@ -152,7 +153,7 @@ st.markdown("""
     section[data-testid="stMain"] .stNumberInput input,
     section[data-testid="stMain"] .stNumberInput span,
     section[data-testid="stMain"] .stNumberInput > div span {
-        font-size: 1rem !important;
+        font-size: clamp(0.9rem, 0.95vw, 1rem) !important;
         font-weight: 600 !important;
         line-height: 1.2 !important;
     }
@@ -165,7 +166,7 @@ st.markdown("""
         display: flex !important;
         align-items: center !important;
         padding: 0 !important;
-        font-size: 1rem !important;
+        font-size: clamp(0.9rem, 0.95vw, 1rem) !important;
         font-weight: 600 !important;
         line-height: 1.2 !important;
     }
@@ -184,8 +185,8 @@ st.markdown("""
         border: none !important;
         border-left: none !important;
         height: 100% !important;
-        min-width: 40px !important;
-        padding: 0 0.5rem !important;
+        min-width: clamp(35px, 3vw, 40px) !important;
+        padding: 0 0.5vw !important;
         border-radius: 0 !important;
         box-shadow: none !important;
         display: flex !important;
@@ -287,82 +288,95 @@ st.markdown("""
         -moz-appearance: textfield !important;
     }
     
-    /* Selectbox Container Styling - SMALLER SIZE */
-    section[data-testid="stMain"] .stSelectbox > div > div {
+    
+    /* ========== SELECTBOX - TARGET CORRECT WRAPPER ========== */
+    
+    /* The OUTER wrapper - this is what we want to style */
+    section[data-testid="stMain"] div.stSelectbox > div > div:first-child {
         background: rgba(10, 14, 39, 0.95) !important;
-        border: 2px solid rgba(13, 110, 253, 0.35) !important;
-        border-radius: 10px !important;
-        transition: all 0.25s ease !important;
+        border: 3px solid rgba(13, 110, 253, 0.6) !important;
+        border-radius: 12px !important;
         min-height: 48px !important;
-        height: 48px !important;
-        padding: 0 0.9rem !important;
+        padding: 0 18px !important;
         box-shadow: 
-            0 0 20px rgba(13, 110, 253, 0.3),
-            inset 0 0 15px rgba(13, 110, 253, 0.05) !important;
+            0 0 25px rgba(13, 110, 253, 0.3) !important,
+            inset 0 0 20px rgba(13, 110, 253, 0.08) !important;
         display: flex !important;
         align-items: center !important;
-        box-sizing: border-box !important;
-        margin: 0 !important;
-        animation: selectGlowStrong 3s ease-in-out infinite;
+        transition: all 0.3s ease !important;
+        overflow: hidden !important;
     }
     
-    @keyframes selectGlowStrong {
+    @keyframes selectCyanGlow {
         0%, 100% { 
+            border-color: #0d6efd !important;
             box-shadow: 
-                0 0 20px rgba(13, 110, 253, 0.3),
-                inset 0 0 15px rgba(13, 110, 253, 0.05);
-            border-color: rgba(13, 110, 253, 0.45);
+                0 0 45px rgba(13, 110, 253, 0.65),
+                0 0 35px rgba(138, 43, 226, 0.45),
+                inset 0 0 40px rgba(13, 110, 253, 0.18) !important;
         }
         50% { 
+            border-color: #8a2be2 !important;
             box-shadow: 
-                0 0 45px rgba(138, 43, 226, 0.5),
-                inset 0 0 30px rgba(138, 43, 226, 0.08);
-            border-color: rgba(138, 43, 226, 0.6);
+                0 0 55px rgba(138, 43, 226, 0.75),
+                0 0 45px rgba(13, 110, 253, 0.55),
+                inset 0 0 50px rgba(138, 43, 226, 0.25) !important;
         }
     }
     
-    section[data-testid="stMain"] .stSelectbox > div > div:hover {
-        border-color: rgba(13, 110, 253, 0.65) !important;
+    /* Hover */
+    section[data-testid="stMain"] div.stSelectbox > div > div:first-child:hover {
+        border-color: rgba(13, 110, 253, 0.85) !important;
         box-shadow: 
-            0 0 35px rgba(13, 110, 253, 0.4),
-            inset 0 0 18px rgba(13, 110, 253, 0.07) !important;
-        animation: none !important;
+            0 0 35px rgba(13, 110, 253, 0.5) !important,
+            inset 0 0 25px rgba(13, 110, 253, 0.12) !important;
     }
     
-    section[data-testid="stMain"] .stSelectbox > div > div:focus-within {
-        border-color: #0d6efd !important;
-        box-shadow: 
-            0 0 40px rgba(13, 110, 253, 0.55),
-            inset 0 0 22px rgba(13, 110, 253, 0.1) !important;
-        animation: none !important;
+    /* CRITICAL: Remove the brackets { } by hiding inner baseweb select borders */
+    section[data-testid="stMain"] div.stSelectbox [data-baseweb="select"],
+    section[data-testid="stMain"] div.stSelectbox [data-baseweb="select"] *,
+    section[data-testid="stMain"] div.stSelectbox [role="button"],
+    section[data-testid="stMain"] div.stSelectbox [role="button"] * {
+        border: none !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-top: none !important;
+        border-bottom: none !important;
+        border-width: 0 !important;
+        border-style: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        outline: none !important;
     }
     
-    section[data-testid="stMain"] .stSelectbox [data-baseweb="select"] > div,
-    section[data-testid="stMain"] .stSelectbox [data-baseweb="select"] span,
-    section[data-testid="stMain"] .stSelectbox [role="button"] > div,
-    section[data-testid="stMain"] .stSelectbox [role="button"] span,
-    section[data-testid="stMain"] .stSelectbox [data-baseweb="select"] div[class*="singleValue"] {
+    /* Force transparent on EVERYTHING inside */
+    section[data-testid="stMain"] div.stSelectbox div[class*="css-"],
+    section[data-testid="stMain"] div.stSelectbox div[class^="st-"] {
+        border: none !important;
+        background: transparent !important;
+    }
+    
+    /* Text */
+    section[data-testid="stMain"] div.stSelectbox span {
         color: #ffffff !important;
-        font-size: 1rem !important;
+        font-size: 1.05rem !important;
         font-weight: 600 !important;
-        padding: 0 !important;
-        line-height: 1.2 !important;
-        margin: 0 !important;
     }
     
-    section[data-testid="stMain"] .stSelectbox svg {
+    /* Arrow */
+    section[data-testid="stMain"] div.stSelectbox svg {
         fill: #0d6efd !important;
-        width: 20px !important;
-        height: 20px !important;
-        filter: drop-shadow(0 2px 8px rgba(13,110,253,0.12)) !important;
-        transition: transform 0.2s ease !important;
+        width: 24px !important;
+        height: 24px !important;
+        filter: drop-shadow(0 4px 18px rgba(13,110,253,0.8)) !important;
     }
     
-    section[data-testid="stMain"] .stSelectbox > div > div:hover svg {
-        transform: scale(1.06) !important;
+    section[data-testid="stMain"] div.stSelectbox:hover svg {
+        fill: #0d6efd !important;
+        filter: drop-shadow(0 5px 22px rgba(13,110,253,0.9)) !important;
     }
     
-    /* Dropdown Menu - SMALLER */
+    /* Dropdown Menu */
     div[data-baseweb="menu"] {
         background: linear-gradient(180deg, rgba(10,14,39,0.98), rgba(10,14,39,0.96)) !important;
         border: 2px solid rgba(13, 110, 253, 0.3) !important;
@@ -374,12 +388,12 @@ st.markdown("""
     
     div[data-baseweb="menu"] li {
         color: #e2e8f0 !important;
-        padding: 0.75rem 1.1rem !important;
+        padding: 0.75vh 1.1vw !important;
         font-weight: 500 !important;
-        font-size: 1rem !important;
+        font-size: clamp(0.9rem, 0.95vw, 1rem) !important;
         transition: all 0.15s ease !important;
         border-bottom: 1px solid rgba(13, 110, 253, 0.05) !important;
-        margin: 0.25rem 0.5rem !important;
+        margin: 0.25vh 0.5vw !important;
         border-radius: 5px !important;
     }
     
@@ -394,10 +408,10 @@ st.markdown("""
         transform: translateX(2px);
     }
     
-    /* Slider Styling - SMALLER */
+    /* Slider Styling - responsive */
     section[data-testid="stMain"] .stSlider > div > div > div {
         background: rgba(13, 110, 253, 0.13) !important;
-        height: 8px !important;
+        height: clamp(7px, 0.8vh, 8px) !important;
         border-radius: 8px !important;
         box-shadow: 0 0 10px rgba(13, 110, 253, 0.15) !important;
     }
@@ -409,8 +423,8 @@ st.markdown("""
     
     section[data-testid="stMain"] .stSlider [role="slider"] {
         background: #fff !important;
-        width: 22px !important;
-        height: 22px !important;
+        width: clamp(20px, 2vw, 22px) !important;
+        height: clamp(20px, 2vw, 22px) !important;
         border: 3px solid #0d6efd !important;
         box-shadow: 0 0 18px rgba(13, 110, 253, 0.45) !important;
         animation: sliderGlow 2s ease-in-out infinite;
@@ -425,16 +439,16 @@ st.markdown("""
         }
     }
     
-    /* Time Badge - SMALLER */
+    /* Time Badge - responsive */
     .time-badge {
         background: rgba(13, 110, 253, 0.11);
         border: 2px solid rgba(13, 110, 253, 0.28);
         border-radius: 8px;
-        padding: 0.8rem 1.2rem;
+        padding: 0.8vh 1.2vw;
         text-align: center;
-        margin-top: 0.6rem;
+        margin-top: 0.6vh;
         font-weight: 700;
-        font-size: 1.4rem;
+        font-size: clamp(1.2rem, 1.3vw, 1.4rem);
         box-shadow: 0 0 15px rgba(13, 110, 253, 0.16);
         animation: badgeGlow 3s ease-in-out infinite;
     }
@@ -449,22 +463,22 @@ st.markdown("""
     }
     
     section[data-testid="stMain"] .stSlider > label {
-        font-size: 1.15rem !important;
+        font-size: clamp(1rem, 1.1vw, 1.15rem) !important;
         font-weight: 600 !important;
     }
     
     section[data-testid="stMain"] .stSlider span {
-        font-size: 1rem !important;
+        font-size: clamp(0.9rem, 0.95vw, 1rem) !important;
         font-weight: 600 !important;
     }
     
-    /* Ratio Display Card - SMALLER */
+    /* Ratio Display Card - responsive */
     .ratio-display {
         background: linear-gradient(135deg, rgba(13, 110, 253, 0.11) 0%, rgba(138, 43, 226, 0.11) 100%);
         border: 2px solid rgba(13, 110, 253, 0.28);
         border-radius: 15px;
-        padding: 1.6rem;
-        margin: 1.6rem 0;
+        padding: 1.6vh 1.2vw;
+        margin: 1.6vh 0;
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -501,15 +515,15 @@ st.markdown("""
     
     .ratio-label {
         color: #8892b0;
-        font-size: 0.95rem;
+        font-size: clamp(0.85rem, 0.9vw, 0.95rem);
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 1.5px;
-        margin-bottom: 0.6rem;
+        margin-bottom: 0.6vh;
     }
     
     .ratio-value {
-        font-size: 3rem;
+        font-size: clamp(2.5rem, 2.8vw, 3rem);
         font-weight: 800;
         background: linear-gradient(135deg, #0d6efd 0%, #8a2be2 100%);
         -webkit-background-clip: text;
@@ -519,19 +533,19 @@ st.markdown("""
         text-shadow: 0 0 22px rgba(13, 110, 253, 0.22);
     }
     
-    /* Warning Box - SMALLER */
+    /* Warning Box - responsive */
     .warning-box {
         background: rgba(239, 68, 68, 0.11);
         border: 2px solid rgba(239, 68, 68, 0.28);
         border-radius: 10px;
-        padding: 0.85rem 1.1rem;
+        padding: 0.85vh 1.1vw;
         color: #f87171;
-        font-size: 1rem;
+        font-size: clamp(0.9rem, 0.95vw, 1rem);
         font-weight: 600;
-        margin: 1.5rem 0;
+        margin: 1.5vh 0;
         display: flex;
         align-items: center;
-        gap: 0.7rem;
+        gap: 0.7vw;
         box-shadow: 0 0 18px rgba(239, 68, 68, 0.16);
         animation: warningPulse 2s ease-in-out infinite;
     }
@@ -545,26 +559,26 @@ st.markdown("""
         }
     }
     
-    /* Button Styling - SMALLER */
+    /* Button Styling - responsive */
     section[data-testid="stMain"] .stButton > button {
         background: linear-gradient(135deg, #0d6efd 0%, #8a2be2 100%) !important;
         color: #fff !important;
         font-weight: 700 !important;
-        font-size: 1.2rem !important;
-        padding: 1rem 2.2rem !important;
+        font-size: clamp(1.1rem, 1.15vw, 1.2rem) !important;
+        padding: 1vh 2.2vw !important;
         border-radius: 12px !important;
         border: none !important;
         box-shadow: 0 8px 26px rgba(13, 110, 253, 0.32) !important;
         text-transform: uppercase !important;
         letter-spacing: 3.5px !important;
         transition: all 0.3s ease !important;
-        min-height: 52px !important;
+        min-height: clamp(48px, 5vh, 52px) !important;
         animation: buttonGlow 3s ease-in-out infinite;
         line-height: 1.1 !important;
     }
     
     section[data-testid="stMain"] .stButton > button * {
-        font-size: 1.2rem !important;
+        font-size: clamp(1.1rem, 1.15vw, 1.2rem) !important;
         font-weight: 700 !important;
         line-height: 1.1 !important;
     }
@@ -591,16 +605,16 @@ st.markdown("""
     }
     
     .row-widget.stHorizontal {
-        gap: 1.5rem !important;
+        gap: 1.5vw !important;
     }
     
-    /* Page heading styles - SMALLER with more top margin */
+    /* Page heading styles - responsive with MORE top margin for spacing */
     .page-heading {
-        font-size: 1.9rem;
+        font-size: clamp(1.6rem, 1.8vw, 1.9rem);
         font-weight: 700;
         text-align: center;
-        margin-top: 0.5rem;
-        margin-bottom: 1rem;
+        margin-top: 4vh;  /* Increased from 1vh to 4vh */
+        margin-bottom: 2vh;  /* Increased from 1.5vh to 2vh */
         letter-spacing: 0.25px;
         color: #ffffff;
         position: relative;
@@ -613,7 +627,7 @@ st.markdown("""
         bottom: -6px;
         left: 50%;
         transform: translateX(-50%);
-        width: 110px;
+        width: clamp(90px, 8vw, 110px);
         height: 2px;
         background: linear-gradient(90deg, #0d6efd, #8a2be2);
         border-radius: 2px;
@@ -622,11 +636,11 @@ st.markdown("""
     .page-subtext {
         text-align: center;
         color: #9fb0c8;
-        font-size: 0.85rem;
-        margin-bottom: 1rem;
+        font-size: clamp(0.75rem, 0.8vw, 0.85rem);
+        margin-bottom: 1vh;
         font-weight: 600;
     }
-    /* Full-page overlay loader - SMALLER */
+    /* Full-page overlay loader - responsive */
     .tg-overlay {
         position: fixed !important;
         inset: 0 !important;
@@ -639,46 +653,89 @@ st.markdown("""
     }
 
     .tg-card {
-        width: min(680px, calc(100% - 45px));
+        width: min(680px, 85vw);
         background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
         border: 1px solid rgba(255,255,255,0.04);
         border-radius: 14px;
-        padding: 1.6rem 1.8rem;
+        padding: 2vh 2vw;
         box-shadow: 0 12px 45px rgba(2,6,23,0.45), 0 5px 26px rgba(13,110,253,0.04);
-        display: flex; flex-direction: column; align-items: center; gap: 0.7rem;
+        display: flex; flex-direction: column; align-items: center; gap: 0.7vh;
     }
 
-    .tg-loader-wrap { display:flex; align-items:center; gap:0.9rem; }
+    .tg-loader-wrap { display:flex; align-items:center; gap:1vw; }
 
     .tg-loader {
-        width: 72px; height: 72px; border-radius: 50%;
+        width: clamp(64px, 6vw, 72px); 
+        height: clamp(64px, 6vw, 72px); 
+        border-radius: 50%;
         background: conic-gradient(from 0deg, #0d6efd, #8a2be2, #6b46c1);
         display:flex; align-items:center; justify-content:center; position: relative;
         box-shadow: 0 7px 32px rgba(13,110,253,0.18), inset 0 -4px 13px rgba(0,0,0,0.2);
         animation: tg-spin 1.8s linear infinite;
     }
 
-    .tg-loader-inner { width:48px; height:48px; border-radius:50%; background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); display:flex; align-items:center; justify-content:center; font-size:25px; }
+    .tg-loader-inner { 
+        width: clamp(44px, 4vw, 48px); 
+        height: clamp(44px, 4vw, 48px); 
+        border-radius:50%; 
+        background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); 
+        display:flex; align-items:center; justify-content:center; 
+        font-size: clamp(20px, 2.2vw, 25px); 
+    }
     @keyframes tg-spin { to { transform: rotate(360deg); } }
 
-    .tg-title { font-size: 1.2rem; font-weight: 800; margin: 0.4rem 0 0.12rem 0; letter-spacing: 0.45px; background: linear-gradient(90deg,#fff,#cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .tg-sub { color: #cbd5e1; font-size: 0.85rem; margin: 0; }
+    .tg-title { 
+        font-size: clamp(1.05rem, 1.15vw, 1.2rem); 
+        font-weight: 800; 
+        margin: 0.4vh 0 0.12vh 0; 
+        letter-spacing: 0.45px; 
+        background: linear-gradient(90deg,#fff,#cbd5e1); 
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; 
+    }
+    .tg-sub { 
+        color: #cbd5e1; 
+        font-size: clamp(0.8rem, 0.85vw, 0.85rem); 
+        margin: 0; 
+    }
 
-    .tg-progress { margin-top: 0.7rem; width: 78%; height: 9px; background: rgba(255,255,255,0.03); border-radius: 7px; overflow: hidden; }
-    .tg-progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg,#0d6efd,#8a2be2); border-radius: 7px; box-shadow: 0 5px 18px rgba(13,110,253,0.18); animation: tg-progress-anim 4s linear forwards; }
+    .tg-progress { 
+        margin-top: 0.7vh; 
+        width: 78%; 
+        height: clamp(8px, 0.9vh, 9px); 
+        background: rgba(255,255,255,0.03); 
+        border-radius: 7px; 
+        overflow: hidden; 
+    }
+    .tg-progress-bar { 
+        height: 100%; 
+        width: 0%; 
+        background: linear-gradient(90deg,#0d6efd,#8a2be2); 
+        border-radius: 7px; 
+        box-shadow: 0 5px 18px rgba(13,110,253,0.18); 
+        animation: tg-progress-anim 4s linear forwards; 
+    }
     @keyframes tg-progress-anim { from { width: 0%; } to { width: 100%; } }
 
-    .tg-dots{ margin-top: 0.55rem; }
-    .tg-dots span{ display:inline-block; width:7px; height:7px; margin: 0 4px; background: #fff; border-radius:50%; opacity:0.13; box-shadow:0 4px 13px rgba(13,110,253,0.04); animation: tg-dots 1s infinite; }
-    .tg-dots span:nth-child(1){ animation-delay: 0s } .tg-dots span:nth-child(2){ animation-delay: 0.14s } .tg-dots span:nth-child(3){ animation-delay: 0.28s }
-    @keyframes tg-dots{ 0%{opacity:0.13; transform: translateY(0)} 50%{opacity:1; transform: translateY(-6px)} 100%{opacity:0.13; transform: translateY(0)} }
-
-    @media (max-width: 640px) {
-        .tg-card { padding: 0.95rem; }
-        .tg-title { font-size: 0.95rem; }
-        .tg-loader { width:56px; height:56px; }
-        .tg-loader-inner { width:38px; height:38px; font-size:17px; }
-        .tg-progress { width: 88%; }
+    .tg-dots{ margin-top: 0.55vh; }
+    .tg-dots span{ 
+        display:inline-block; 
+        width: clamp(6px, 0.6vw, 7px); 
+        height: clamp(6px, 0.6vw, 7px); 
+        margin: 0 0.3vw; 
+        background: #fff; 
+        border-radius:50%; 
+        opacity:0.13; 
+        box-shadow:0 4px 13px rgba(13,110,253,0.04); 
+        animation: tg-dots 1s infinite; 
+    }
+    .tg-dots span:nth-child(1){ animation-delay: 0s } 
+    .tg-dots span:nth-child(2){ animation-delay: 0.14s } 
+    .tg-dots span:nth-child(3){ animation-delay: 0.28s }
+    @keyframes tg-dots{ 
+        0%{opacity:0.13; transform: translateY(0)} 
+        50%{opacity:1; transform: translateY(-6px)} 
+        100%{opacity:0.13; transform: translateY(0)} 
     }
 
 </style>
@@ -708,20 +765,40 @@ with col2:
 # Calculate and display ratio in real-time
 if sender_init_balance > 0:
     amount_to_sender_balance_ratio = transaction_amount / sender_init_balance
-    
+
     # Validation: Check if transaction amount exceeds sender balance
     if transaction_amount > sender_init_balance:
-        st.markdown(f'<div class="warning-box">⚠️ Transaction amount cannot exceed sender balance!</div>', unsafe_allow_html=True)
+        predict_disabled = True
+        st.markdown(
+            '<div class="warning-box">⚠️ Transaction amount cannot exceed sender balance!</div>',
+            unsafe_allow_html=True
+        )
     else:
+        predict_disabled = False
         st.markdown(f"""
         <div class="ratio-display">
             <div class="ratio-label">💸 Amount to Sender Balance Ratio</div>
             <div class="ratio-value">{amount_to_sender_balance_ratio:.4f}</div>
         </div>
         """, unsafe_allow_html=True)
+
 else:
+    # sender_init_balance == 0 → ratio is 0 and prediction disabled
     amount_to_sender_balance_ratio = 0.0
-    st.markdown(f'<div class="ratio-display"><div class="ratio-label">💸 Amount to Sender Balance Ratio</div><div class="ratio-value">0.0000</div></div>', unsafe_allow_html=True)
+    predict_disabled = True
+
+    st.markdown(
+        '<div class="warning-box">⚠️ Sender initial balance is 0 — prediction disabled!</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(f"""
+    <div class="ratio-display">
+        <div class="ratio-label">💸 Amount to Sender Balance Ratio</div>
+        <div class="ratio-value">0.0000</div>
+    </div>
+    """, unsafe_allow_html=True)
+
 
 # Account Balance Section
 st.markdown("""
@@ -786,8 +863,36 @@ with col6:
 
 st.markdown("<div style='height: 35px;'></div>", unsafe_allow_html=True)
 
-# Disable predict button if transaction amount exceeds sender balance
-predict_disabled = transaction_amount > sender_init_balance if sender_init_balance > 0 else False
+# Validation logic
+error_message = ""
+
+# Check if transaction amount is 0
+if transaction_amount == 0:
+    predict_disabled = True
+    error_message = "⚠️ Transaction amount cannot be $0.00. Please enter a valid amount."
+# Check if transaction amount exceeds sender balance
+elif sender_init_balance > 0 and transaction_amount > sender_init_balance:
+    predict_disabled = True
+    error_message = "⚠️ Transaction amount cannot exceed sender balance!"
+
+# Display error message if any
+if error_message:
+    st.markdown(f'''
+    <div style="
+        background: linear-gradient(135deg, rgba(220,38,38,0.12), rgba(239,68,68,0.08));
+        border: 2px solid rgba(220,38,38,0.4);
+        border-radius: 12px;
+        padding: 14px 18px;
+        margin-bottom: 20px;
+        color: #fca5a5;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-align: center;
+        box-shadow: 0 4px 16px rgba(220,38,38,0.2);
+    ">
+        {error_message}
+    </div>
+    ''', unsafe_allow_html=True)
 
 if st.button("Predict Fraud", use_container_width=True, disabled=predict_disabled):
     # Render a full-page styled overlay while 'analyzing' runs
@@ -822,6 +927,10 @@ if st.button("Predict Fraud", use_container_width=True, disabled=predict_disable
         day_of_week,
         amount_to_sender_balance_ratio
     )
+
+    # ✅ ADD RATIO TO RESULT BEFORE STORING
+    if result is not None:
+        result['amount_to_sender_balance_ratio'] = amount_to_sender_balance_ratio
 
     st.session_state.prediction_result = result
     # remove overlay before switching
