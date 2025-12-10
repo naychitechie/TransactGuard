@@ -331,11 +331,11 @@ def apply_dark_theme():
 
     /* Bright glowing button styles (less dark, stronger neon glow) */
     :root {
-        --btn-glow-top: #7c3aed;   /* lighter purple */
-        --btn-glow-bottom: #5b21b6; /* mid purple */
-        --btn-border-strong: rgba(255,255,255,0.12);
-        --btn-text-glow: rgba(255,255,255,0.96);
-        --btn-neon-glow: rgba(124,58,237,0.30);
+        --btn-glow-top: #9487FF;
+        --btn-glow-bottom: #7f73e6;
+        --btn-border-strong: rgba(148, 135, 255, 0.35);
+        --btn-text-glow: #ffffff;
+        --btn-neon-glow: rgba(148,135,255,0.32);
     }
 
     /* Apply to Streamlit buttons and common button inputs */
@@ -358,8 +358,8 @@ def apply_dark_theme():
     /* Hover: stronger glow, slight lift */
     .stButton > button:hover, button:hover, input[type="button"]:hover, input[type="submit"]:hover {
         transform: translateY(-3px) !important;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 28px 68px rgba(99,66,255,0.20), 0 0 72px rgba(124,58,237,0.32) !important;
-        background: linear-gradient(180deg, #9b5cff 0%, #6d28d9 100%) !important;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 28px 68px rgba(148,135,255,0.32), 0 0 72px rgba(148,135,255,0.38) !important;
+        background: linear-gradient(180deg, #a39bff 0%, #8579f0 100%) !important;
     }
 
     /* Active / pressed state */
@@ -371,7 +371,7 @@ def apply_dark_theme():
     /* Focus: clear neon halo */
     .stButton > button:focus, button:focus, input[type="button"]:focus, input[type="submit"]:focus {
         outline: none !important;
-        box-shadow: 0 12px 56px rgba(99,66,255,0.22), 0 0 56px rgba(124,58,237,0.28) !important;
+        box-shadow: 0 12px 56px rgba(148,135,255,0.32), 0 0 56px rgba(148,135,255,0.38) !important;
     }
 
 
@@ -393,7 +393,7 @@ def apply_dark_theme():
     </style>
 
     <div class="top-nav">
-      <a class="nav-left" href="/?page=pages/01_Home.py" data-page="pages/01_Home.py" style="cursor: pointer;">
+      <a class="nav-left" href="/Home" data-page="Home" style="cursor: pointer;">
         <svg class="shield-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <defs>
             <linearGradient id="g1" x1="0%" x2="100%" y1="0%" y2="100%">
@@ -414,12 +414,12 @@ def apply_dark_theme():
         <span class="brand-text">TransactGuard</span>
       </a>
       <div class="nav-center">
-        <a class="nav-link" href="/?page=pages/04_Data.py" data-page="pages/04_Data.py" style="cursor: pointer;">Data</a>
-        <a class="nav-link" href="/?page=pages/03_Results.py" data-page="pages/03_Results.py" style="cursor: pointer;">Results</a>
-        <a class="nav-link" href="/?page=pages/05_About.py" data-page="pages/05_About.py" style="cursor: pointer;">About</a>
+        <a class="nav-link" href="/Data" data-page="Data" style="cursor: pointer;">Data</a>
+        <a class="nav-link" href="/Results" data-page="Results" style="cursor: pointer;">Results</a>
+        <a class="nav-link" href="/About" data-page="About" style="cursor: pointer;">About</a>
       </div>
       <div class="nav-right">
-        <a class="nav-cta" href="/?page=pages/02_Predict.py" data-page="pages/02_Predict.py" style="cursor: pointer;">Predict</a>
+        <a class="nav-cta" href="/Predict" data-page="Predict" style="cursor: pointer;">Predict</a>
       </div>
     </div>
 
@@ -451,17 +451,20 @@ def apply_dark_theme():
     document.addEventListener('DOMContentLoaded', nukeTopLeftControls);
     setInterval(nukeTopLeftControls, 400);
     
-    // Handle top navigation bar (same-tab anchors; rely on native nav)
+    // Handle top navigation bar (use Streamlit page slugs; rely on anchors)
     document.addEventListener('DOMContentLoaded', function() {
         const navLinks = document.querySelectorAll('.nav-left, .nav-link, .nav-cta');
         navLinks.forEach(link => { try { link.target = '_self'; } catch (e) {} });
 
-        // Update active state based on query param
-        const params = new URLSearchParams(window.location.search);
-        const current = params.get('page') || 'pages/01_Home.py';
+        // Update active state based on path slug
+        const path = window.location.pathname.replace(/^\\/+/, ''); // remove leading slash
+        const slug = path || 'Home';
         navLinks.forEach(link => {
-            if (link.getAttribute('data-page') === current) link.classList.add('active');
-            else link.classList.remove('active');
+            if ((link.getAttribute('data-page') || '').toLowerCase() === slug.toLowerCase()) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
         });
 
         // Remove any element overlapping the brand area (e.g., leftover sidebar toggle)
