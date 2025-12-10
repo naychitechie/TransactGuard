@@ -1,26 +1,38 @@
 """Home page"""
 import streamlit as st
 from src.styles import apply_dark_theme, render_sidebar
+import os
 
-st.set_page_config(page_title="Home - TransactGuard", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Home - TransactGuard", layout="wide")
 apply_dark_theme()
-render_sidebar()
 
-st.image("assets/images/logo.png", use_container_width=True)  # or width=1200
+# Hero section: embed image as a data URI so it reliably loads, then overlay text
+import base64
+from pathlib import Path
 
-st.markdown("""
-<div class="hero-section">
-    <h1 class="hero-title">Fraud Transaction Prediction</h1>
-    <p style="font-size: 16px; color: var(--text-secondary); max-width: 600px; margin: 24px auto;">
-        Predict fraudulent transactions with precision and confidence. Our advanced algorithms analyze transaction data in real-time.
-    </p>
+img_path = Path(__file__).resolve().parents[1] / "assets" / "images" / "b5.png"
+data_uri = ""
+if img_path.exists():
+        with open(img_path, "rb") as f:
+                encoded = base64.b64encode(f.read()).decode()
+                data_uri = f"data:image/png;base64,{encoded}"
+else:
+        # fallback to the relative path if file isn't found for some reason
+        data_uri = "assets/images/background-image.png"
+
+st.markdown(f"""
+<div class="hero-section-wrapper">
+    <img class="hero-bg" src="{data_uri}" alt="Hero background" />
+    <div class="hero-text-overlay">
+        <h1 class="hero-title">Fraud Transaction Prediction</h1>
+        <p style="font-size: 16px; color: var(--text-secondary); max-width: 800px; margin: 24px auto;">
+            Predict fraudulent transactions with precision and confidence. Our advanced algorithms analyze transaction data in real-time.
+        </p>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([3, 1, 3])
-with col2:
-    if st.button("🚀 Get Started"):
-        st.switch_page("pages/02_Predict.py")
+st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
 
 st.markdown('<h2 class="section-title">Real-Life Fraud Transactions</h2>', unsafe_allow_html=True)
 

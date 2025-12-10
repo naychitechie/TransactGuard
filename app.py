@@ -6,7 +6,7 @@ st.set_page_config(
     page_title="TransactGuard",
     page_icon="🛡️",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
 apply_dark_theme()

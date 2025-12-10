@@ -2,7 +2,7 @@
 import streamlit as st
 from src.styles import apply_dark_theme, render_sidebar
 
-st.set_page_config(page_title="Results - TransactGuard", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Results - TransactGuard", layout="wide", initial_sidebar_state="expanded")
 apply_dark_theme()
 render_sidebar()
 

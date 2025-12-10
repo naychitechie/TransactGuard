@@ -7,7 +7,7 @@ import plotly.express as px
 from src.styles import apply_dark_theme, render_sidebar
 from scipy import stats
 
-st.set_page_config(page_title="Data - TransactGuard", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Data - TransactGuard", layout="wide", initial_sidebar_state="expanded")
 apply_dark_theme()
 render_sidebar()
 
