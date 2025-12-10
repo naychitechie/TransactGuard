@@ -6,7 +6,8 @@ st.set_page_config(page_title="Results - TransactGuard", layout="wide", initial_
 apply_dark_theme()
 render_sidebar()
 
-if not st.session_state.get("prediction_result"):
+prediction_result = st.session_state.get("prediction_result")
+if prediction_result is None or (hasattr(prediction_result, 'empty') and prediction_result.empty):
     st.warning("No prediction result found.")
     if st.button("Go to Predict"):
         st.switch_page("pages/02_Predict.py")
