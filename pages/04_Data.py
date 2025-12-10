@@ -141,80 +141,41 @@ st.markdown("""
     font-weight: 600 !important;
     color: #94a3b8 !important;
     font-size: 12px !important;
-}
+}             
 
-/* Custom styles for visualization buttons */
-.viz-button-container .stButton button {
-    background: linear-gradient(135deg, #0d6efd 0%, #8a2be2 100%) !important;
-        color: #fff !important;
-        font-weight: 700 !important;
-        border-radius: 12px !important;
-        border: none !important;
-        box-shadow: 0 8px 26px rgba(13, 110, 253, 0.32) !important;
-        text-transform: uppercase !important;
-        letter-spacing: 3.5px !important;
-        transition: all 0.3s ease !important;
-        min-height: 52px !important;
-        animation: buttonGlow 3s ease-in-out infinite;
-        line-height: 1.1 !important;
-}
-
-/* Hover state for the small visualization buttons */
-.viz-button-container .stButton button:hover {
-    background-color: rgba(51, 65, 85, 0.9) !important;
-    border-color: #64748b !important;
-}
-                    
-/* Custom styles for the small visualization buttons */
-# .viz-button-container .stButton > button {
-#     background: rgba(30, 41, 59, 0.8) !important;
-#     border: 1px solid #475569 !important;
-#     color: #cbd5e1 !important;
-#     font-size: 0.9rem !important;
-#     font-weight: 600 !important;
-#     letter-spacing: 0.5px !important;
-#     text-transform: none !important;
-#     padding: 0.75rem 0.5rem !important;
-#     min-height: 40px !important;
-#     animation: none !important;
-#     box-shadow: none !important;
-# }
-
-/* Local Selectbox Styling to override global defaults */
-.data-page-selectbox .stSelectbox > div > div {
-    background-color: rgba(15, 23, 42, 0.6) !important;
-    border: 1px solid rgba(148, 163, 184, 0.2) !important;
-    border-radius: 8px !important;
-    color: #e2e8f0 !important;
-}
-.data-page-selectbox .stSelectbox div[data-baseweb="select"] > div {
-    background-color: transparent !important;
-    color: #e2e8f0 !important;
-}
-            
-.data-page-selectbox .stSelectbox div[data-baseweb="select"] * {
-    background-color: transparent !important;
-}
-                  
-
-/* Specific style for a primary action button on the Data page */
-.data-primary-button .stButton > button {
+ /* Button Styling - responsive */
+    section[data-testid="stMain"] .stButton > button {
         background: linear-gradient(135deg, #0d6efd 0%, #8a2be2 100%) !important;
         color: #fff !important;
         font-weight: 700 !important;
-        font-size: 1.2rem !important;
-        padding: 1rem 2.2rem !important;
+        font-size: clamp(1.1rem, 1.15vw, 1.2rem) !important;
+        padding: 1vh 2.2vw !important;
         border-radius: 12px !important;
         border: none !important;
         box-shadow: 0 8px 26px rgba(13, 110, 253, 0.32) !important;
         text-transform: uppercase !important;
         letter-spacing: 3.5px !important;
         transition: all 0.3s ease !important;
-        min-height: 52px !important;
+        min-height: clamp(48px, 5vh, 52px) !important;
         animation: buttonGlow 3s ease-in-out infinite;
         line-height: 1.1 !important;
-}
-            
+    }
+    
+    section[data-testid="stMain"] .stButton > button * {
+        font-size: clamp(1.1rem, 1.15vw, 1.2rem) !important;
+        font-weight: 700 !important;
+        line-height: 1.1 !important;
+    }
+    
+    @keyframes buttonGlow {
+        0%, 100% { 
+            box-shadow: 0 8px 26px rgba(13, 110, 253, 0.32);
+        }
+        50% { 
+            box-shadow: 0 11px 36px rgba(138, 43, 226, 0.5);
+        }
+    }
+               
 </style>
 """, unsafe_allow_html=True)
 
